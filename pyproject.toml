@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "modric-cli"
+version = "0.1.0"
+description = "Command-line client for the Modric CI/orchestration backend, built for external code agents (Claude Code, Codex) to read/create/update scripts, jobs, triggers and config-maps and to read job execution records for troubleshooting."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.9"
+authors = [{ name = "Modric" }]
+keywords = ["modric", "ci", "orchestration", "cli", "agent", "troubleshooting"]
+dependencies = []   # zero runtime dependencies — Python standard library only
+
+[project.scripts]
+modric = "modric_cli.__main__:main"
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "ruff>=0.4"]
+
+[tool.setuptools.packages.find]
+include = ["modric_cli*"]
+
+[tool.ruff]
+line-length = 100
+lint.select = ["E", "F", "I"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
