@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "modric-cli"
-version = "0.1.0"
+version = "0.0.1"
 description = "Command-line client for the Modric CI/orchestration backend, built for external code agents (Claude Code, Codex) to read/create/update scripts, jobs, triggers and config-maps and to read job execution records for troubleshooting."
 readme = "README.md"
 license = { text = "MIT" }

@@ -3,7 +3,7 @@
 
 PYTHON ?= python3
 
-.PHONY: help build test lint install uninstall install-skill uninstall-skill clean
+.PHONY: help build test lint install uninstall install-skill uninstall-skill release clean
 
 help:
 	@echo "Targets:"
@@ -11,6 +11,7 @@ help:
 	@echo "  make uninstall        Remove the 'modric' command"
 	@echo "  make install-skill    Install modric-cli as a Claude Code / Codex skill"
 	@echo "  make uninstall-skill  Remove the installed skill"
+	@echo "  make release          Build + tag + publish a GitHub release (prompts for version)"
 	@echo "  make test             Run the test suite"
 	@echo "  make lint             Ruff lint"
 	@echo "  make build            Build sdist + wheel into dist/"
@@ -36,6 +37,10 @@ install-skill:
 
 uninstall-skill:
 	@sh scripts/uninstall-skill.sh all
+
+# Prompts for the version (default = patch bump); pass VERSION=x.y.z to skip the prompt.
+release:
+	@bash scripts/release.sh $(VERSION)
 
 clean:
 	rm -rf dist build *.egg-info modric_cli/__pycache__ tests/__pycache__ .pytest_cache

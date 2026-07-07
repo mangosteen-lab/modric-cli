@@ -5,4 +5,9 @@ Modric resources — scripts, job definitions, triggers, config-maps — and rea
 execution records for troubleshooting, authenticating with the user's API token.
 """
 
-__version__ = "0.1.0"
+try:
+    from importlib.metadata import version as _dist_version
+
+    __version__ = _dist_version("modric-cli")
+except Exception:                       # running from source (not installed)
+    __version__ = "0.0.1"

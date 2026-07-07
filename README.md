@@ -16,22 +16,21 @@ investigate and fix jobs on your behalf.
 
 ## Install
 
-Requires Python 3.9+. No other runtime dependencies.
+Requires Python 3.9+. No other runtime dependencies. **No clone needed** — the install
+script downloads the released wheel from GitHub and verifies its checksum.
 
 **macOS / Linux**
 ```bash
-git clone https://github.com/mangosteen-lab/modric-cli && cd modric-cli
-make install          # pipx if available, else pip install --user
-# or directly:  sh scripts/install.sh
+curl -fsSL https://raw.githubusercontent.com/mangosteen-lab/modric-cli/master/scripts/install.sh | sh
 ```
 
 **Windows (PowerShell)**
 ```powershell
-git clone https://github.com/mangosteen-lab/modric-cli; cd modric-cli
-powershell -ExecutionPolicy Bypass -File scripts\install.ps1
+irm https://raw.githubusercontent.com/mangosteen-lab/modric-cli/master/scripts/install.ps1 | iex
 ```
 
-Verify: `modric --help`.
+Pin a version with `MODRIC_CLI_VERSION=0.0.1` before the command. From a checkout you can
+also run `make install` (installs the local source). Verify with `modric --help`.
 
 ## Authenticate
 
@@ -49,15 +48,18 @@ Precedence: **flag > env > config file**.
 
 ## Install as an agent skill
 
-Teach Claude Code / Codex to use this CLI automatically:
+Teach Claude Code / Codex to use this CLI automatically — also **no clone needed**:
 
 ```bash
-make install-skill                 # both agents
-sh scripts/install-skill.sh claude # Claude Code only  (-> ~/.claude/skills/modric-troubleshooting/)
-sh scripts/install-skill.sh codex  # Codex only         (appends to ~/.codex/AGENTS.md)
+curl -fsSL https://raw.githubusercontent.com/mangosteen-lab/modric-cli/master/scripts/install-skill.sh | sh -s -- all
 ```
-Windows: `powershell -ExecutionPolicy Bypass -File scripts\install-skill.ps1 all`.
-Remove with `make uninstall-skill`.
+Pass `claude` or `codex` instead of `all` for just one. Windows:
+```powershell
+irm https://raw.githubusercontent.com/mangosteen-lab/modric-cli/master/scripts/install-skill.ps1 | iex
+```
+From a checkout: `make install-skill`. Remove with `make uninstall-skill` (or
+`scripts/uninstall-skill.sh all`). Claude Code lands in
+`~/.claude/skills/modric-troubleshooting/`; Codex appends to `~/.codex/AGENTS.md`.
 
 ## Command reference
 
