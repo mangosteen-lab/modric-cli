@@ -10,4 +10,4 @@ try:
 
     __version__ = _dist_version("modric-cli")
 except Exception:                       # running from source (not installed)
-    __version__ = "0.0.2"
+    __version__ = "0.0.3"
