@@ -32,6 +32,18 @@ irm https://raw.githubusercontent.com/mangosteen-lab/modric-cli/master/scripts/i
 Pin a version with `MODRIC_CLI_VERSION=0.0.1` before the command. From a checkout you can
 also run `make install` (installs the local source). Verify with `modric --help`.
 
+## Upgrade
+
+```bash
+modric upgrade            # fetch + verify + install the latest release
+modric upgrade --check    # just report {current, latest, upgrade_available}
+modric upgrade --version 0.0.3   # install a specific version
+```
+`upgrade` downloads the release wheel, verifies its SHA256, and reinstalls it into the
+current environment (works whether you installed via pipx or `pip --user`). It is not on
+PyPI, so `pip install -U modric-cli` won't find it — use `modric upgrade`, or just re-run
+the install one-liner above (it always installs the latest).
+
 ## Authenticate
 
 Get your API token from the Modric web UI → **Account settings**, then:

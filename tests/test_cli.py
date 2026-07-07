@@ -109,6 +109,22 @@ def test_configmaps_search_matches_key_not_value(server, capsys):
     assert any(r["field"] == "key" and r["snippet"] == "API_TOKEN" for r in res["results"])
 
 
+def test_upgrade_check_reports_newer(server, capsys):
+    server.route("GET", "/repos/mangosteen-lab/modric-cli/releases/latest", {"tag_name": "v9.9.9"})
+    rc, out = run(server, ["upgrade", "--check"], capsys)
+    res = json.loads(out)
+    assert rc == 0 and res["latest"] == "9.9.9" and res["upgrade_available"] is True
+
+
+def test_upgrade_noop_when_current_is_latest(server, capsys):
+    from modric_cli import __version__
+    server.route("GET", "/repos/mangosteen-lab/modric-cli/releases/latest",
+                 {"tag_name": "v" + __version__})
+    rc, out = run(server, ["upgrade"], capsys)
+    res = json.loads(out)
+    assert res["upgraded"] is False and "up to date" in res["message"]
+
+
 def test_auth_login_validates_and_saves(server, capsys):
     server.route("GET", "/api/auth/me", {"username": "alice", "email": "a@x.com"})
     rc, out = run(server, ["auth", "login", "--url", "https://modric.test", "--token", "tok-123"],

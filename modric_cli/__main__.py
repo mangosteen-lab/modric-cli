@@ -12,6 +12,7 @@ import sys
 from . import __version__
 from .client import ModricError
 from .commands import auth, configmaps, definitions, jobs, scripts, triggers
+from .commands import upgrade as upgrade_cmd
 from .output import die, emit
 
 
@@ -60,6 +61,15 @@ def build_parser() -> argparse.ArgumentParser:
         s = leaf(sub, name, handler, help_, extra=[yesf])
         s.set_defaults(destructive=True)
         return s
+
+    # upgrade ---------------------------------------------------------------
+    up = res.add_parser("upgrade", parents=[common],
+                        help="upgrade modric-cli to the latest GitHub release")
+    up.add_argument("--check", action="store_true",
+                    help="only report whether a newer version is available")
+    up.add_argument("--version", dest="version",
+                    help="install a specific version instead of the latest")
+    up.set_defaults(handler=upgrade_cmd.run)
 
     # auth ------------------------------------------------------------------
     a = res.add_parser("auth", help="authenticate and manage the saved credentials")
