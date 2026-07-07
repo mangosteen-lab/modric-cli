@@ -36,7 +36,14 @@ modric scripts search "<term>" --content
 modric {definitions|triggers|configmaps|jobs} search "<term>"
 ```
 
-Resources: `modric {scripts|definitions|triggers|configmaps|jobs} --help`.
+Run a command on a machine to inspect the box that ran a failed job:
+
+```bash
+modric machine list                       # ids, labels, ip, os, status
+modric machine run <MACHINE_ID> "<command>" --type 3   # returns {status, exit_code, output}
+```
+
+Resources: `modric {scripts|definitions|triggers|configmaps|jobs|machine} --help`.
 Rules: confirm before any create/update/run; `delete` is destructive and needs `--yes` —
 only with the user's explicit go-ahead; never request secret values; config-map values are
 never returned by the API.

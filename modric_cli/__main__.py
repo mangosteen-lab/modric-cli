@@ -11,7 +11,7 @@ import sys
 
 from . import __version__
 from .client import ModricError
-from .commands import auth, configmaps, definitions, jobs, scripts, triggers
+from .commands import auth, configmaps, definitions, jobs, machines, scripts, triggers
 from .commands import upgrade as upgrade_cmd
 from .output import die, emit
 
@@ -70,6 +70,24 @@ def build_parser() -> argparse.ArgumentParser:
     up.add_argument("--version", dest="version",
                     help="install a specific version instead of the latest")
     up.set_defaults(handler=upgrade_cmd.run)
+
+    # machine ---------------------------------------------------------------
+    m = res.add_parser("machine", aliases=["machines"],
+                       help="list machines, get one, or run a command on a machine")
+    msub = m.add_subparsers(dest="action", required=True)
+    leaf(msub, "list", machines.list_, "list registered machines (id, name, labels, ip, status)")
+    g = leaf(msub, "get", machines.get, "get a machine's full details by id")
+    g.add_argument("machine_id")
+    r = leaf(msub, "run", machines.run, "run a command on a machine via its agent")
+    r.add_argument("machine_id")
+    r.add_argument("command", nargs="?", help="command/script text (or use --file, or '-' stdin)")
+    r.add_argument("--file", help="read the command/script from a file ('-' for stdin)")
+    r.add_argument("--type", type=int, default=9,
+                   help="1=bat 2=python 3=shell 4=powershell 5=node 6=ruby 7=perl 8=go "
+                        "9=auto (default: cmd on Windows, bash on Linux)")
+    r.add_argument("--timeout", type=int, default=600, help="seconds, default 600")
+    r.add_argument("--arg", action="append", metavar="ARG",
+                   help="positional arg passed to the script (repeatable)")
 
     # auth ------------------------------------------------------------------
     a = res.add_parser("auth", help="authenticate and manage the saved credentials")

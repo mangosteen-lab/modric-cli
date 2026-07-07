@@ -144,6 +144,20 @@ modric jobs retry JOB_ID
 ```
 (Job execution records cannot be deleted via the API.)
 
+### machine
+```bash
+modric machine list                       # all registered machines: id, name, labels, ip, os, status
+modric machine get MACHINE_ID             # full details of one machine (JSON)
+modric machine run MACHINE_ID "echo hi"            # run a command via the agent, wait, return output
+modric machine run MACHINE_ID --file check.sh --type 3 --timeout 120
+echo "Get-Host" | modric machine run MACHINE_ID --file - --type 4   # from stdin, PowerShell
+```
+`run` executes on the machine's agent as a one-step (audited) job and returns
+`{job_id, status, exit_code, output}`. `--type`: `1=bat 2=python 3=shell 4=powershell
+5=node 6=ruby 7=perl 8=go 9=auto` (default `9` = cmd on Windows, bash on Linux). Handy for
+troubleshooting: check the environment, a missing dependency, or disk space on the box that
+ran a failed job.
+
 ### triggers
 ```bash
 modric triggers list

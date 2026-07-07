@@ -109,6 +109,26 @@ def test_configmaps_search_matches_key_not_value(server, capsys):
     assert any(r["field"] == "key" and r["snippet"] == "API_TOKEN" for r in res["results"])
 
 
+def test_machine_list_and_get(server, capsys):
+    server.route("GET", "/api/machines", [
+        {"machine_id": "m-1", "name": "win", "ip": "10.0.0.1",
+         "labels": {"os": "windows"}, "status": "ONLINE"}])
+    server.route("GET", "/api/machines/m-1", {"machine_id": "m-1", "name": "win", "os": "windows"})
+    rc, out = run(server, ["machine", "list"], capsys)
+    assert rc == 0 and json.loads(out)[0]["machine_id"] == "m-1"
+    rc, out = run(server, ["machine", "get", "m-1"], capsys)
+    assert json.loads(out)["os"] == "windows"
+
+
+def test_machine_run_sends_command(server, capsys):
+    server.route("POST", "/api/machines/m-1/run",
+                 {"job_id": "j1", "status": "COMPLETED", "exit_code": 0, "output": "hi\n"})
+    rc, out = run(server, ["machine", "run", "m-1", "echo hi", "--type", "3"], capsys)
+    assert rc == 0 and json.loads(out)["exit_code"] == 0
+    body = server.calls[-1]["body"]
+    assert body["command"] == "echo hi" and body["script_type"] == 3 and body["timeout"] == 600
+
+
 def test_upgrade_check_reports_newer(server, capsys):
     server.route("GET", "/repos/mangosteen-lab/modric-cli/releases/latest", {"tag_name": "v9.9.9"})
     rc, out = run(server, ["upgrade", "--check"], capsys)

@@ -45,7 +45,13 @@ modric definitions list | get <id> | create --file def.json | update <id> --file
 modric triggers list | create --name N --cron "0 3 * * *" | update <id> --cron "..." | delete <id> --yes
 modric configmaps list | get <name> | create <name> --key K=V --secret K=V | update <name> --key K=V | delete <name> --yes
 modric jobs list [--definition-id ID] | get <id> | logs <id> --step N | run --definition NAME --input K=V | retry <id>
+modric machine list | get <id> | run <id> "<command>" [--type N] [--timeout S]
 ```
+
+`modric machine run` executes a command on a machine's agent and returns
+`{status, exit_code, output}` — use it while troubleshooting to inspect the box that ran a
+failed job (check a dependency, env var, path, or disk). `--type` defaults to 9 (auto: cmd on
+Windows, bash on Linux).
 
 Script types: `1=bat 2=python 3=shell 4=powershell 5=node 6=ruby 7=perl 8=go 9=auto`.
 
